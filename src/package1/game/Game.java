@@ -59,7 +59,7 @@ public class Game extends JFrame {
     private GameClockTimer timer;
 
 
-    private Game() {
+    public Game() {
         super("ASTROYED");
 
         setLayout(new BorderLayout());
@@ -214,6 +214,9 @@ public class Game extends JFrame {
         entities.add(rocketShip);
     }
 
+    public void addEntity(Entity entity){
+        pendingEntities.add(entity);
+    }
     /******************************************************************
      * main method of the GUI that makes an instance of the GUI
      * @param args

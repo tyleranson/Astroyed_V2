@@ -5,6 +5,8 @@ import package1.game.gameUtil.Movement;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by tyleranson on 3/15/16.
@@ -39,8 +41,14 @@ public class Ship extends Entity {
      * is the down button pressed
      */
     private boolean downPressed;
+    /**
+     * is the space bar pressed
+     */
+    private boolean spacePressed;
 
     private int animationFrame;
+
+    private List<Bullet> bullets;
 
     public Ship() {
         super(new Movement(600 / 2, 600 / 2), new Movement(0.0, 0.0), 10.0);
@@ -50,6 +58,7 @@ public class Ship extends Entity {
         this.leftPressed = false;
         this.rightPressed = false;
         this.downPressed = false;
+        this.spacePressed = false;
         this.animationFrame = 0;
     }
 
@@ -81,6 +90,8 @@ public class Ship extends Entity {
         this.downPressed = downPressed;
     }
 
+    public void setSpacePressed(boolean spacePressed) { this.spacePressed = spacePressed; }
+
     @Override
     public void update(Game game) {
         super.update(game);
@@ -101,6 +112,28 @@ public class Ship extends Entity {
             if (speed.getShipMagnitude() >= MAX_SPEED * MAX_SPEED) {
                 speed.controlSpeed().scale(MAX_SPEED);
             }
+        }
+
+        Iterator<Bullet> iter = bullets.iterator();
+        while(iter.hasNext())   {
+            Bullet bullet = iter.next();
+            if(bullet.isDeadObject()){
+                iter.remove();
+            }
+        }
+
+        if(spacePressed) {
+			/*
+			 * We can only create a new bullet if we haven't yet exceeded the
+			 * maximum number of bullets that we can have fired at once.
+			 *
+			 * If a new bullet can be fired, we reset the fire cooldown, and
+			 * register a new bullet to the game world.
+			 */
+
+            Bullet bullet = new Bullet(this, rotation);
+            bullets.add(bullet);
+            game.addEntity(bullet);
         }
     }
 
